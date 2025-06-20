@@ -25,11 +25,11 @@ model UserChat {
 }
 
 model User {
-    id          Int       @id @default(autoincrement())
+    id          Int         @id @default(autoincrement())
     username    String?
     hash        String?
     salt        String?
-    avatar      String?
+    avatar      String?     @default("assets/defaultAvatar.png")
     chats       UserChat[]
     messages    Mesagge[]
 }
@@ -41,5 +41,4 @@ model Mesagge {
     chatId        Int
     author        User      @relation(fields: [authorId], references: [id])
     authorId      Int
-
 }
