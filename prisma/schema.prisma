@@ -29,6 +29,7 @@ model User {
     username    String?
     hash        String?
     salt        String?
+    avatar      String?
     chats       UserChat[]
     messages    Mesagge[]
 }
