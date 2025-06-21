@@ -12,11 +12,25 @@ exports.getAllUsers = async () => {
   }
 };
 
-exports.getUser = async () => {
+exports.getUser = async (userId) => {
   try {
     return await prisma.user.findUnique({
       where: {
         id: parseInt(userId),
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getUserByUsername = async (username) => {
+  try {
+    console.log(username);
+
+    return await prisma.user.findUnique({
+      where: {
+        username: username,
       },
     });
   } catch (err) {
@@ -64,6 +78,16 @@ exports.updateAvatar = async (id, avatar) => {
         avatar: avatar,
       },
     });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// DEV QUERIES
+
+exports.deleteAllUsers = async () => {
+  try {
+    await prisma.user.deleteMany({});
   } catch (err) {
     console.error(err);
   }
