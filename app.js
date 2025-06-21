@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 const userRouter = require("./routers/userRouter");
+const chatRouter = require("./routers/chatRouter");
 
 //
 
@@ -12,6 +13,7 @@ const app = express();
 app.use(cors());
 
 const passport = require("passport");
+
 require("./config/passport")(passport);
 
 app.use(express.json());
@@ -20,6 +22,7 @@ app.set(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 app.use("/users", userRouter);
+app.use("/chats", chatRouter);
 
 app.use((err, req, res, next) => {
   console.log(err);

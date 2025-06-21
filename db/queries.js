@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { connect } = require("../routers/userRouter");
 
 const prisma = new PrismaClient();
 
@@ -76,6 +77,34 @@ exports.updateAvatar = async (id, avatar) => {
       },
       data: {
         avatar: avatar,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// CHATS QUERIES
+
+exports.createChat = async (userId, targetId) => {
+  try {
+    return await prisma.chat.create({
+      data: {
+        users: {
+          connect: [{ id: userId }, { id: targetId }],
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getChats = async () => {
+  try {
+    return await prisma.user.findMany({
+      include: {
+        chats: true,
       },
     });
   } catch (err) {

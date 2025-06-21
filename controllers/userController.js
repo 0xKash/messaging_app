@@ -1,4 +1,4 @@
-const prisma = require("../db/user");
+const prisma = require("../db/queries");
 const utils = require("../lib/utils");
 const {
   CustomNotFoundError,

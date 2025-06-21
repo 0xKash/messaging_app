@@ -1,4 +1,4 @@
-const prisma = require("../db/user");
+const prisma = require("../db/queries");
 
 const fs = require("fs");
 const path = require("path");
