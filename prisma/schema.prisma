@@ -14,31 +14,30 @@ model Chat {
     users       UserChat[]
 }
 
+model User {
+  id          Int         @id @default(autoincrement())
+  username    String?     @unique
+  hash        String?
+  salt        String?
+  avatar      String?     @default("assets/defaultAvatar.png")
+  chats       UserChat[]
+  messages    Mesagge[]
+}
+
 model UserChat {
-  id        Int     @default(autoincrement())
   chat      Chat    @relation(fields: [chatId], references: [id])
-  user      User    @relation(fields: [userId], references: [id])
   chatId    Int
+  user      User    @relation(fields: [userId], references: [id])
   userId    Int
 
   @@id([chatId, userId])
 }
 
-model User {
-    id          Int         @id @default(autoincrement())
-    username    String?     @unique
-    hash        String?
-    salt        String?
-    avatar      String?     @default("assets/defaultAvatar.png")
-    chats       UserChat[]
-    messages    Mesagge[]
-}
-
 model Mesagge {
-    id            Int       @id @default(autoincrement())
-    content       String?
-    chat          Chat      @relation(fields: [chatId], references: [id])
-    chatId        Int
-    author        User      @relation(fields: [authorId], references: [id])
-    authorId      Int
+  id            Int       @id @default(autoincrement())
+  content       String?
+  chat          Chat      @relation(fields: [chatId], references: [id])
+  chatId        Int
+  author        User      @relation(fields: [authorId], references: [id])
+  authorId      Int
 }

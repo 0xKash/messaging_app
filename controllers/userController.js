@@ -3,6 +3,7 @@ const utils = require("../lib/utils");
 const {
   CustomNotFoundError,
   CustomNotAuthorizedError,
+  CustomBadRequestError,
 } = require("../errors/errors");
 
 exports.postUser = async (req, res) => {
@@ -13,7 +14,7 @@ exports.postUser = async (req, res) => {
   const jwt = utils.issueJWT(user);
 
   res.json({
-    success: true,
+    status: "success",
     data: {
       user: user,
       token: jwt.token,
@@ -56,6 +57,23 @@ exports.loginUser = async (req, res) => {
       req.originalUrl
     );
   }
+};
+
+exports.getUserByUsername = async (req, res) => {
+  if (!req.query.username)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "Username query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const user = await prisma.getUsersBySearch(req.query.username);
+
+  res.json({
+    status: "success",
+    data: user,
+  });
 };
 
 // DEV CONTROLLERS
