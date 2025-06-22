@@ -59,7 +59,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.getUserByUsername = async (req, res) => {
+exports.getUserBySearch = async (req, res) => {
   if (!req.query.username)
     throw new CustomBadRequestError(
       "Necessary input missing",

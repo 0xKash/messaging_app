@@ -21,11 +21,19 @@ exports.postChat = async (req, res) => {
   });
 };
 
-exports.getChats = async (req, res) => {
-  const chats = await prisma.getChats();
+exports.getUserChats = async (req, res) => {
+  if (!req.query.userId)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "userId query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const user = await prisma.getUserById(req.query.userId, true);
 
   res.json({
-    test: "ok",
-    data: chats,
+    status: "success",
+    data: user,
   });
 };

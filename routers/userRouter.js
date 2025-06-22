@@ -5,7 +5,7 @@ const {
   loginUser,
   deleteAllUsers,
   getAllUsers,
-  getUserByUsername,
+  getUserBySearch,
 } = require("../controllers/userController");
 const { validateUser } = require("../validators/users");
 const isAuth = require("../lib/authMiddlewares");
@@ -14,10 +14,13 @@ const isAuth = require("../lib/authMiddlewares");
 
 const userRouter = Router();
 
-userRouter.get("/", isAuth, getUserByUsername);
+userRouter.get("/", isAuth, getUserBySearch);
 userRouter.post("/", validateUser, postUser);
-userRouter.delete("/", isAuth, deleteAllUsers);
 
 userRouter.post("/login", validateUser, loginUser);
+
+// DEV ROUTES
+
+userRouter.delete("/", isAuth, deleteAllUsers);
 
 module.exports = userRouter;

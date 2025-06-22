@@ -17,7 +17,7 @@ const options = {
 
 const strategy = new JwtStrategy(options, async (payload, done) => {
   try {
-    const user = await prisma.getUser(payload.sub);
+    const user = await prisma.getUserById(payload.sub);
 
     if (user) {
       return done(null, user);
