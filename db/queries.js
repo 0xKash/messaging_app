@@ -81,13 +81,49 @@ exports.createChat = async (userId, targetId) => {
   }
 };
 
+exports.getChatMessages = async (chatId) => {
+  try {
+    return await prisma.chat.findUnique({
+      where: {
+        id: parseInt(chatId),
+      },
+      include: {
+        messages: true,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// MESSAGES QUERIES
+
+exports.createMessage = async (content, authorId, chatId) => {
+  try {
+    return await prisma.mesagge.create({
+      data: {
+        content: content,
+        chat: {
+          connect: { id: parseInt(chatId) },
+        },
+        author: {
+          connect: { id: parseInt(authorId) },
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // DEV QUERIES
 
-exports.getAllUsers = async (includeChat) => {
+exports.getAllUsers = async (includeChat, includeMessages) => {
   try {
     return await prisma.user.findMany({
       include: {
         chats: includeChat,
+        messages: includeMessages,
       },
     });
   } catch (err) {

@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const userRouter = require("./routers/userRouter");
 const chatRouter = require("./routers/chatRouter");
+const messageRouter = require("./routers/messageRouter");
 
 //
 
@@ -23,6 +24,7 @@ app.use(passport.initialize());
 
 app.use("/users", userRouter);
 app.use("/chats", chatRouter);
+app.use("/messages", messageRouter);
 
 app.use((err, req, res, next) => {
   console.log(err);

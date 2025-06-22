@@ -1,5 +1,8 @@
 const prisma = require("../db/queries");
-const { CustomBadRequestError } = require("../errors/errors");
+const {
+  CustomBadRequestError,
+  CustomNotFoundError,
+} = require("../errors/errors");
 
 exports.postChat = async (req, res) => {
   if (!req.query.targetId)
@@ -32,8 +35,41 @@ exports.getUserChats = async (req, res) => {
 
   const user = await prisma.getUserById(req.query.userId, true);
 
+  if (!user)
+    throw new CustomNotFoundError(
+      "User not found",
+      "The userId does not belong to any existent user",
+      "Try making sure it is correct and the user exists",
+      req.originalUrl
+    );
+
   res.json({
     status: "success",
     data: user,
+  });
+};
+
+exports.getChatMessages = async (req, res) => {
+  if (!req.query.chatId)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "chatId query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const chat = await prisma.getChatMessages(req.query.chatId);
+
+  if (!chat)
+    throw new CustomNotFoundError(
+      "Chat not found",
+      "The chatId does not belong to any existent user",
+      "Try making sure it is correct and the user exists",
+      req.originalUrl
+    );
+
+  res.json({
+    status: "success",
+    data: chat,
   });
 };

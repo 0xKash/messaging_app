@@ -21,6 +21,7 @@ userRouter.post("/login", validateUser, loginUser);
 
 // DEV ROUTES
 
+userRouter.put("/", getAllUsers);
 userRouter.delete("/", isAuth, deleteAllUsers);
 
 module.exports = userRouter;

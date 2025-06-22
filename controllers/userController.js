@@ -79,7 +79,7 @@ exports.getUserBySearch = async (req, res) => {
 // DEV CONTROLLERS
 
 exports.getAllUsers = async (req, res) => {
-  const users = await prisma.getAllUsers();
+  const users = await prisma.getAllUsers(true, true);
 
   res.send(users);
 };
