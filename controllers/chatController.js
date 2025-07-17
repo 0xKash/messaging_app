@@ -1,3 +1,4 @@
+// imports
 const prisma = require("../db/queries");
 const {
   CustomBadRequestError,
@@ -6,6 +7,7 @@ const {
 
 exports.postChat = async (req, res) => {
   if (!req.query.targetId)
+    // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
       "Target ID query parameter is missing",
@@ -26,6 +28,7 @@ exports.postChat = async (req, res) => {
 
 exports.getUserChats = async (req, res) => {
   if (!req.query.userId)
+    // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
       "userId query parameter is missing",
@@ -51,6 +54,7 @@ exports.getUserChats = async (req, res) => {
 
 exports.getChatMessages = async (req, res) => {
   if (!req.query.chatId)
+    // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
       "chatId query parameter is missing",

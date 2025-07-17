@@ -1,10 +1,11 @@
+// imports
 const { PrismaClient } = require("@prisma/client");
 const { connect } = require("../routers/userRouter");
 
+// prisma client setup
 const prisma = new PrismaClient();
 
-// USERS QUERIES
-
+// user queries
 exports.getUserById = async (userId, includeChat) => {
   try {
     return await prisma.user.findUnique({
@@ -65,8 +66,7 @@ exports.updateAvatar = async (id, avatar) => {
   }
 };
 
-// CHATS QUERIES
-
+// chat queries
 exports.createChat = async (userId, targetId) => {
   try {
     return await prisma.chat.create({
@@ -96,8 +96,7 @@ exports.getChatMessages = async (chatId) => {
   }
 };
 
-// MESSAGES QUERIES
-
+// message queries
 exports.createMessage = async (content, authorId, chatId) => {
   try {
     return await prisma.message.create({
@@ -116,8 +115,7 @@ exports.createMessage = async (content, authorId, chatId) => {
   }
 };
 
-// DEV QUERIES
-
+// dev queries (only used for development purposes)
 exports.getAllUsers = async (includeChat, includeMessages) => {
   try {
     return await prisma.user.findMany({

@@ -1,5 +1,7 @@
+// imports
 const prisma = require("../db/queries");
 
+// Function still in progress...
 exports.postMessage = async (req, res) => {
   const message = prisma.createMessage(
     "First time testing this",
@@ -12,5 +14,3 @@ exports.postMessage = async (req, res) => {
     data: message,
   });
 };
-
-exports.getUserMessages = async () => {};

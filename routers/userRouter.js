@@ -1,3 +1,4 @@
+// imports
 const { Router } = require("express");
 const {
   testController,
@@ -10,8 +11,7 @@ const {
 const { validateUser } = require("../validators/users");
 const isAuth = require("../lib/authMiddlewares");
 
-//
-
+// userRouter setup
 const userRouter = Router();
 
 userRouter.get("/", isAuth, getUserBySearch);
@@ -19,9 +19,9 @@ userRouter.post("/", validateUser, postUser);
 
 userRouter.post("/login", validateUser, loginUser);
 
-// DEV ROUTES
-
+// dev routes (only used for development purposes)
 userRouter.put("/", getAllUsers);
 userRouter.delete("/", isAuth, deleteAllUsers);
 
+// exports
 module.exports = userRouter;

@@ -1,21 +1,20 @@
 require("dotenv").config();
-const express = require("express");
 
+// imports
+const express = require("express");
 const cors = require("cors");
+
+const passport = require("passport");
+require("./config/passport")(passport);
 
 const userRouter = require("./routers/userRouter");
 const chatRouter = require("./routers/chatRouter");
 const messageRouter = require("./routers/messageRouter");
 
-//
-
+// app setup
 const app = express();
 
 app.use(cors());
-
-const passport = require("passport");
-
-require("./config/passport")(passport);
 
 app.use(express.json());
 app.set(express.urlencoded({ extended: true }));
@@ -26,6 +25,7 @@ app.use("/users", userRouter);
 app.use("/chats", chatRouter);
 app.use("/messages", messageRouter);
 
+// errorhandler
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.statusCode || 500).send(err);

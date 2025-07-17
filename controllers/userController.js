@@ -1,3 +1,4 @@
+// imports
 const prisma = require("../db/queries");
 const utils = require("../lib/utils");
 const {
@@ -6,6 +7,7 @@ const {
   CustomBadRequestError,
 } = require("../errors/errors");
 
+// This function checks if user's input is valid, creates a new user on db & issues a new JWT token
 exports.postUser = async (req, res) => {
   const saltHash = utils.genPassword(req.body.password);
   const { salt, hash } = saltHash;
@@ -23,6 +25,7 @@ exports.postUser = async (req, res) => {
   });
 };
 
+// This function checks if user's input is valid & issues a JWT token
 exports.loginUser = async (req, res) => {
   const user = await prisma.getUserByUsername(req.body.username);
 
@@ -50,7 +53,7 @@ exports.loginUser = async (req, res) => {
       },
     });
   } else {
-    throw new CustomNotAuthorizedError(
+    throw new CustomNotAuthorizedError( // Error in case the input is incorrect
       "You entered the wrong password",
       `${req.body.password} is not the correct password`,
       "Try with another password",
@@ -76,12 +79,10 @@ exports.getUserBySearch = async (req, res) => {
   });
 };
 
-// DEV CONTROLLERS
+// dev controllers (only used for development purposes)
 
 exports.getAllUsers = async (req, res) => {
   const users = await prisma.getAllUsers(true, true);
 
   res.send(users);
 };
-
-exports.deleteAllUsers = async (req, res) => {};

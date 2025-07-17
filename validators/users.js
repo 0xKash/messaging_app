@@ -1,3 +1,4 @@
+// imports
 const { body } = require("express-validator");
 const { validateResult } = require("../lib/validateMiddleware");
 
