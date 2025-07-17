@@ -100,7 +100,7 @@ exports.getChatMessages = async (chatId) => {
 
 exports.createMessage = async (content, authorId, chatId) => {
   try {
-    return await prisma.message.create({
+    return await prisma.mesagge.create({
       data: {
         content: content,
         chat: {
