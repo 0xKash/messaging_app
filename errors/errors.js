@@ -1,3 +1,5 @@
+const { useEffect } = require("react");
+
 class CustomNotFoundError extends Error {
   constructor(message, details, suggestion, path) {
     super(message);
