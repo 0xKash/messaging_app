@@ -10,7 +10,7 @@ datasource db {
 
 model Chat {
     id          Int           @id @default(autoincrement())
-    messages    Mesagge[]
+    messages    Message[]
     users       User[]
 }
 
@@ -21,12 +21,12 @@ model User {
   salt        String?
   avatar      String?     @default("assets/defaultAvatar.png")
   chats       Chat[]
-  messages    Mesagge[]
+  messages    Message[]
 }
 
 
 
-model Mesagge {
+model Message {
   id            Int       @id @default(autoincrement())
   content       String?
   chat          Chat      @relation(fields: [chatId], references: [id])
