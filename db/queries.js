@@ -6,38 +6,6 @@ const { connect } = require("../routers/userRouter");
 const prisma = new PrismaClient();
 
 // user queries
-exports.getUserById = async (userId, includeChat) => {
-  try {
-    return await prisma.user.findUnique({
-      where: {
-        id: parseInt(userId),
-      },
-      include: {
-        chats: includeChat,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-exports.getUsersBySearch = async (searhInput) => {
-  try {
-    return await prisma.user.findMany({
-      where: {
-        username: {
-          startsWith: searhInput,
-        },
-      },
-      include: {
-        chat: true,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 exports.createUser = async (username, hash, salt) => {
   try {
     return await prisma.user.create({
@@ -52,16 +20,38 @@ exports.createUser = async (username, hash, salt) => {
   }
 };
 
-exports.updateAvatar = async (id, avatar) => {
-  console.log(id, avatar);
-
+exports.getUsersBySearch = async (searhInput, userId) => {
   try {
-    await prisma.user.update({
+    return await prisma.user.findMany({
       where: {
-        id: id,
+        username: {
+          startsWith: searhInput,
+        },
       },
-      data: {
-        avatar: avatar,
+      include: {
+        chats: {
+          include: {
+            users: true,
+          },
+        },
+      },
+      omit: {
+        id: true,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getUserById = async (userId, includeChat) => {
+  try {
+    return await prisma.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+      include: {
+        chats: includeChat,
       },
     });
   } catch (err) {
@@ -87,7 +77,7 @@ exports.createChat = async (userId, targetId) => {
   }
 };
 
-exports.getChatMessages = async (chatId) => {
+exports.getChat = async (chatId) => {
   try {
     return await prisma.chat.findUnique({
       where: {
@@ -95,6 +85,26 @@ exports.getChatMessages = async (chatId) => {
       },
       include: {
         messages: true,
+        users: true,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getChatsByUser = async (userId) => {
+  try {
+    return await prisma.chat.findMany({
+      where: {
+        users: {
+          some: {
+            id: parseInt(userId),
+          },
+        },
+      },
+      include: {
+        users: true,
       },
     });
   } catch (err) {
@@ -115,19 +125,9 @@ exports.createMessage = async (content, authorId, chatId) => {
           connect: { id: parseInt(authorId) },
         },
       },
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// dev queries (only used for development purposes)
-exports.getAllUsers = async (includeChat, includeMessages) => {
-  try {
-    return await prisma.user.findMany({
       include: {
-        chats: includeChat,
-        messages: includeMessages,
+        chat: true,
+        author: true,
       },
     });
   } catch (err) {
@@ -135,26 +135,18 @@ exports.getAllUsers = async (includeChat, includeMessages) => {
   }
 };
 
-exports.deleteAllUsers = async () => {
+// avatar queries
+exports.updateAvatar = async (id, avatar) => {
   try {
-    await prisma.user.deleteMany({});
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-exports.getUserByUsername = async (username) => {
-  try {
-    console.log(username);
-
-    return await prisma.user.findUnique({
+    await prisma.user.update({
       where: {
-        username: username,
+        id: id,
+      },
+      data: {
+        avatar: avatar,
       },
     });
   } catch (err) {
     console.error(err);
   }
 };
-
-//
