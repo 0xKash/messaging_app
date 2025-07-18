@@ -9,7 +9,8 @@ datasource db {
 
 // chat schema
 model Chat { 
-    id          Int           @id @default(autoincrement())
+    id         Int           @id @default(autoincrement())
+    name       String
     message    Message[]
     user       User[]
 }
