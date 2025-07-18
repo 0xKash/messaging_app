@@ -29,6 +29,9 @@ exports.getUsersBySearch = async (searhInput) => {
           startsWith: searhInput,
         },
       },
+      include: {
+        chat: true,
+      },
     });
   } catch (err) {
     console.error(err);
@@ -74,6 +77,9 @@ exports.createChat = async (userId, targetId) => {
         users: {
           connect: [{ id: userId }, { id: targetId }],
         },
+      },
+      include: {
+        users: true,
       },
     });
   } catch (err) {
@@ -150,3 +156,5 @@ exports.getUserByUsername = async (username) => {
     console.error(err);
   }
 };
+
+//
