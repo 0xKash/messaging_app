@@ -10,8 +10,8 @@ datasource db {
 // chat schema
 model Chat { 
     id          Int           @id @default(autoincrement())
-    messages    Message[]
-    users       User[]
+    message    Message[]
+    user       User[]
 }
 
 // user schema
@@ -21,8 +21,8 @@ model User {
   hash        String?
   salt        String?
   avatar      String?     @default("assets/defaultAvatar.png")
-  chats       Chat[]
-  messages    Message[]
+  chat        Chat[]
+  message     Message[]
 }
 
 // message schema
@@ -33,4 +33,5 @@ model Message {
   chatId        Int
   author        User      @relation(fields: [authorId], references: [id])
   authorId      Int
+  date          DateTime  @default(now())
 }
