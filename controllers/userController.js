@@ -31,7 +31,8 @@ exports.getUserById = async (req, res) => {
     throw new CustomBadRequestError(
       "Necessary input missing",
       "UserId query parameter is missing",
-      "Make sure the query is correctly written and not empty"
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
     );
 
   const user = await prisma.getUserById(req.param.userId);
@@ -47,6 +48,23 @@ exports.getUserById = async (req, res) => {
   res.json({
     status: "success",
     data: user,
+  });
+};
+
+exports.getUserChats = async (req, res) => {
+  if (!req.param.userId)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "UserId query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const chats = await prisma.getChatsByUser(req.param.userId);
+
+  res.json({
+    status: "success",
+    data: chats,
   });
 };
 
