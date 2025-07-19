@@ -48,3 +48,16 @@ exports.postChat = async (req, res) => {
     data: chat,
   });
 };
+
+exports.postMessage = async (req, res) => {
+  const message = await prisma.createMessage(
+    req.body.content,
+    req.user.id,
+    req.param.chatId
+  );
+
+  res.json({
+    status: "success",
+    data: message,
+  });
+};
