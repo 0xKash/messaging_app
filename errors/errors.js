@@ -57,11 +57,12 @@ class CustomBadRequestError extends Error {
 }
 
 class CustomPrismaError extends Error {
-  constructor(statusCode, message) {
-    super(message);
+  constructor(prismaCode, message, statusCode) {
+    super(prismaCode, message);
     this.status = "error";
     this.statusCode = statusCode;
     this.error = {
+      prismaCode: prismaCode,
       message: message,
     };
   }
