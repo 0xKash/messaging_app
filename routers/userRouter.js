@@ -1,15 +1,15 @@
 // imports
 const { Router } = require("express");
-const {
-  testController,
-  postUser,
-  loginUser,
-  deleteAllUsers,
-  getAllUsers,
-  getUserBySearch,
-} = require("../controllers/userController");
 const { validateUser } = require("../validators/users");
 const isAuth = require("../lib/authMiddlewares");
+const {
+  getUserById,
+  postUser,
+  getUserChats,
+  loginUser,
+  updateAvatar,
+  getUserBySearch,
+} = require("../controllers/userController");
 
 // userRouter setup
 const userRouter = Router();
@@ -17,11 +17,12 @@ const userRouter = Router();
 userRouter.get("/", isAuth, getUserBySearch);
 userRouter.post("/", validateUser, postUser);
 
+userRouter.get("/:userId", isAuth, getUserById);
+userRouter.get("/:userId/chats", isAuth, getUserChats);
+
 userRouter.post("/login", validateUser, loginUser);
 
-// dev routes (only used for development purposes)
-userRouter.put("/", getAllUsers);
-userRouter.delete("/", isAuth, deleteAllUsers);
+userRouter.post("/avatar", updateAvatar);
 
 // exports
 module.exports = userRouter;
