@@ -7,6 +7,59 @@ const {
   CustomBadRequestError,
 } = require("../errors/errors");
 
+// This function search any user by their unique username through a searchbar
+exports.getUserBySearch = async (req, res) => {
+  if (!req.query.username)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "Username query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const user = await prisma.getUsersBySearch(req.query.username, req.user.id);
+
+  res.json({
+    status: "success",
+    data: user,
+  });
+};
+
+// This function search any user by their unique id
+exports.getUserById = async (req, res) => {
+  if (!req.query.userId)
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "UserId query parameter is missing",
+      "Make sure the query is correctly written and not empty"
+    );
+
+  const user = await prisma.getUserById(req.query.userId);
+
+  if (!user)
+    throw new CustomNotFoundError(
+      "User not found",
+      `The user with the id ${req.query.userId} does not exist`,
+      "Please check if the id is correct",
+      req.originalUrl
+    );
+
+  res.json({
+    status: "success",
+    data: user,
+  });
+};
+
+// This function updated personal avatar (only possible to change your own avatar via auth)
+exports.updateAvatar = async (req, res) => {
+  await prisma.updateAvatar(req.user.id, req.body.avatar);
+
+  res.json({
+    status: "success",
+    data: req.body.avatar,
+  });
+};
+
 // This function checks if user's input is valid, creates a new user on db & issues a new JWT token
 exports.postUser = async (req, res) => {
   const saltHash = utils.genPassword(req.body.password);
@@ -29,8 +82,6 @@ exports.postUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const user = await prisma.getUserByUsername(req.body.username);
 
-  console.log(user);
-
   if (!user)
     throw new CustomNotFoundError(
       "User not found",
@@ -45,7 +96,7 @@ exports.loginUser = async (req, res) => {
     const tokenObject = utils.issueJWT(user);
 
     res.json({
-      success: true,
+      status: "success",
       data: {
         user: user,
         token: tokenObject.token,
@@ -60,29 +111,4 @@ exports.loginUser = async (req, res) => {
       req.originalUrl
     );
   }
-};
-
-exports.getUserBySearch = async (req, res) => {
-  if (!req.query.username)
-    throw new CustomBadRequestError(
-      "Necessary input missing",
-      "Username query parameter is missing",
-      "Make sure the query is correctly written and not empty",
-      req.originalUrl
-    );
-
-  const user = await prisma.getUsersBySearch(req.query.username);
-
-  res.json({
-    status: "success",
-    data: user,
-  });
-};
-
-// dev controllers (only used for development purposes)
-
-exports.getAllUsers = async (req, res) => {
-  const users = await prisma.getAllUsers(true, true);
-
-  res.send(users);
 };
