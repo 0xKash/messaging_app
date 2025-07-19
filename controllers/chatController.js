@@ -5,55 +5,8 @@ const {
   CustomNotFoundError,
 } = require("../errors/errors");
 
-exports.postChat = async (req, res) => {
-  if (!req.query.targetId)
-    // Checks if query is missing
-    throw new CustomBadRequestError(
-      "Necessary input missing",
-      "Target ID query parameter is missing",
-      "Make sure the query is correctly written and not empty",
-      req.originalUrl
-    );
-
-  const chat = await prisma.createChat(
-    req.user.id,
-    parseInt(req.query.targetId)
-  );
-
-  res.json({
-    status: "success",
-    data: chat,
-  });
-};
-
-exports.getUserChats = async (req, res) => {
-  if (!req.query.userId)
-    // Checks if query is missing
-    throw new CustomBadRequestError(
-      "Necessary input missing",
-      "userId query parameter is missing",
-      "Make sure the query is correctly written and not empty",
-      req.originalUrl
-    );
-
-  const user = await prisma.getUserById(req.query.userId, true);
-
-  if (!user)
-    throw new CustomNotFoundError(
-      "User not found",
-      "The userId does not belong to any existent user",
-      "Try making sure it is correct and the user exists",
-      req.originalUrl
-    );
-
-  res.json({
-    status: "success",
-    data: user,
-  });
-};
-
-exports.getChatMessages = async (req, res) => {
-  if (!req.query.chatId)
+exports.getChatById = async (req, res) => {
+  if (!req.param.chatId)
     // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
@@ -62,7 +15,7 @@ exports.getChatMessages = async (req, res) => {
       req.originalUrl
     );
 
-  const chat = await prisma.getChatMessages(req.query.chatId);
+  const chat = await prisma.getChat(req.param.chatId);
 
   if (!chat)
     throw new CustomNotFoundError(
@@ -71,6 +24,24 @@ exports.getChatMessages = async (req, res) => {
       "Try making sure it is correct and the user exists",
       req.originalUrl
     );
+
+  res.json({
+    status: "success",
+    data: chat,
+  });
+};
+
+exports.postChat = async (req, res) => {
+  if (!req.param.userId)
+    // Checks if query is missing
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "Target ID query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+
+  const chat = await prisma.createChat(req.user.id, req.param.userId);
 
   res.json({
     status: "success",
