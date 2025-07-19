@@ -1,37 +1,35 @@
 // imports
-const { CustomInternalServerError } = require("./errors");
+const { CustomPrismaError } = require("./errors");
 
 const handlePrismaError = (err) => {
   switch (err.code) {
-    // Unique constraint failed on the {constraint}
+    // handling duplicate key errors
     case "P2002":
-      throw new CustomInternalServerError(
-        "Something went wrong",
-        `Duplicated field value: ${err.meta.target}`
+      throw new CustomPrismaError(
+        err.code,
+        `Duplicate field value: ${err.meta.target}`,
+        400
       );
 
-    // Foreign key constraint failed on the field: {field_name}
-    case "P2003":
-      throw new CustomInternalServerError(
-        "Something went wrong",
-        `Invalid input data: ${err.meta.target}`
-      );
-
-    /* The change you are trying to make would violate the required relation '{relation_name}' between the {model_a_name} and {model_b_name} models. */
+    // handling invalid id errors
     case "P2014":
-      throw new CustomInternalServerError(
-        "Something went wrong",
-        `Invalid ID: ${err.meta.target}`
+      throw new CustomPrismaError(
+        err.code,
+        `Invalid ID: ${err.meta.target}`,
+        400
       );
 
-    // An operation failed because it depends on one or more records that were required but not found. {cause}
-    case "P2025":
-      throw new CustomInternalServerError(
-        "Something went wrong",
-        `Operation depends on one or more records not found ${err.meta.target}`
+    // handling invalid data errors
+    case "P2003":
+      throw new CustomPrismaError(
+        err.code,
+        `Invalid input data: ${err.meta.target}`,
+        400
       );
+
+    // handling all other errors
     default:
-      throw new CustomInternalServerError("Something went wrong", err.meta);
+      throw new CustomPrismaError(err.code, `Something went wrong`, 500);
   }
 };
 
