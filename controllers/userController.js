@@ -50,9 +50,9 @@ exports.getUserById = async (req, res) => {
   });
 };
 
-// This function updated personal avatar (only possible to change your own avatar via auth)
+// This function updated personal avatar
 exports.updateAvatar = async (req, res) => {
-  await prisma.updateAvatar(req.user.id, req.body.avatar);
+  await prisma.updateAvatar(req.query.userId, req.body.avatar);
 
   res.json({
     status: "success",
