@@ -9,7 +9,6 @@ require("./config/passport")(passport);
 
 const userRouter = require("./routers/userRouter");
 const chatRouter = require("./routers/chatRouter");
-const messageRouter = require("./routers/messageRouter");
 
 // app setup
 const app = express();
@@ -23,7 +22,6 @@ app.use(passport.initialize());
 
 app.use("/users", userRouter);
 app.use("/chats", chatRouter);
-app.use("/messages", messageRouter);
 
 // errorhandler
 app.use((err, req, res, next) => {
