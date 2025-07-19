@@ -1,5 +1,6 @@
 // imports
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
+const handlePrismaError = require("../errors/HandlePrismaError");
 
 // prisma client setup
 const prisma = new PrismaClient();
@@ -15,7 +16,9 @@ exports.createUser = async (username, hash, salt) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -40,7 +43,9 @@ exports.getUsersBySearch = async (searhInput, userId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -55,7 +60,9 @@ exports.getUserById = async (userId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -69,7 +76,9 @@ exports.getUserByUsername = async (username) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -87,7 +96,9 @@ exports.createChat = async (userId, targetId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -103,7 +114,9 @@ exports.getChat = async (chatId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -122,7 +135,9 @@ exports.getChatsByUser = async (userId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -145,7 +160,9 @@ exports.createMessage = async (content, authorId, chatId) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
 
@@ -161,6 +178,8 @@ exports.updateAvatar = async (id, avatar) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(err);
+    }
   }
 };
