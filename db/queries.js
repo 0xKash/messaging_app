@@ -31,7 +31,7 @@ exports.getUsersBySearch = async (searhInput, userId) => {
             some: {
               users: {
                 some: {
-                  id: parseInt(userId),
+                  id: Number(userId),
                 },
               },
             },
@@ -48,7 +48,7 @@ exports.getUserById = async (userId, includeChat) => {
   try {
     return await prisma.user.findUnique({
       where: {
-        id: parseInt(userId),
+        id: Number(userId),
       },
       include: {
         chats: includeChat,
@@ -79,7 +79,7 @@ exports.createChat = async (userId, targetId) => {
     return await prisma.chat.create({
       data: {
         users: {
-          connect: [{ id: userId }, { id: targetId }],
+          connect: [{ id: Number(userId) }, { id: Number(targetId) }],
         },
       },
       include: {
@@ -95,7 +95,7 @@ exports.getChat = async (chatId) => {
   try {
     return await prisma.chat.findUnique({
       where: {
-        id: parseInt(chatId),
+        id: Number(chatId),
       },
       include: {
         messages: true,
@@ -113,7 +113,7 @@ exports.getChatsByUser = async (userId) => {
       where: {
         users: {
           some: {
-            id: parseInt(userId),
+            id: Number(userId),
           },
         },
       },
@@ -133,10 +133,10 @@ exports.createMessage = async (content, authorId, chatId) => {
       data: {
         content: content,
         chat: {
-          connect: { id: parseInt(chatId) },
+          connect: { id: Number(chatId) },
         },
         author: {
-          connect: { id: parseInt(authorId) },
+          connect: { id: Number(authorId) },
         },
       },
       include: {
@@ -154,7 +154,7 @@ exports.updateAvatar = async (id, avatar) => {
   try {
     await prisma.user.update({
       where: {
-        id: id,
+        id: Number(id),
       },
       data: {
         avatar: avatar,
