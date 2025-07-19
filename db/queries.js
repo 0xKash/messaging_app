@@ -1,6 +1,5 @@
 // imports
 const { PrismaClient } = require("@prisma/client");
-const { connect } = require("../routers/userRouter");
 
 // prisma client setup
 const prisma = new PrismaClient();
@@ -27,16 +26,17 @@ exports.getUsersBySearch = async (searhInput, userId) => {
         username: {
           startsWith: searhInput,
         },
-      },
-      include: {
-        chats: {
-          include: {
-            users: true,
+        NOT: {
+          chats: {
+            some: {
+              users: {
+                some: {
+                  id: parseInt(userId),
+                },
+              },
+            },
           },
         },
-      },
-      omit: {
-        id: true,
       },
     });
   } catch (err) {
@@ -52,6 +52,20 @@ exports.getUserById = async (userId, includeChat) => {
       },
       include: {
         chats: includeChat,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.getUserByUsername = async (username) => {
+  try {
+    console.log(username);
+
+    return await prisma.user.findUnique({
+      where: {
+        username: username,
       },
     });
   } catch (err) {
