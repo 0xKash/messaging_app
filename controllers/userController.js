@@ -7,7 +7,7 @@ const {
   CustomBadRequestError,
 } = require("../errors/errors");
 
-// This function search any user by their unique username through a searchbar
+// This function search any user by their unique username through a searchbar (req.query)
 exports.getUserBySearch = async (req, res) => {
   if (!req.query.username)
     throw new CustomBadRequestError(
@@ -25,7 +25,7 @@ exports.getUserBySearch = async (req, res) => {
   });
 };
 
-// This function search any user by their unique id
+// This function search any user by their unique id (req.param)
 exports.getUserById = async (req, res) => {
   if (!req.query.userId)
     throw new CustomBadRequestError(
@@ -34,7 +34,7 @@ exports.getUserById = async (req, res) => {
       "Make sure the query is correctly written and not empty"
     );
 
-  const user = await prisma.getUserById(req.query.userId);
+  const user = await prisma.getUserById(req.param.userId);
 
   if (!user)
     throw new CustomNotFoundError(
@@ -52,7 +52,7 @@ exports.getUserById = async (req, res) => {
 
 // This function updated personal avatar
 exports.updateAvatar = async (req, res) => {
-  await prisma.updateAvatar(req.query.userId, req.body.avatar);
+  await prisma.updateAvatar(req.param.userId, req.body.avatar);
 
   res.json({
     status: "success",
