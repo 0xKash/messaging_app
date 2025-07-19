@@ -6,7 +6,7 @@ const {
 } = require("../errors/errors");
 
 exports.getChatById = async (req, res) => {
-  if (!req.param.chatId)
+  if (!req.params.chatId)
     // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
@@ -15,7 +15,7 @@ exports.getChatById = async (req, res) => {
       req.originalUrl
     );
 
-  const chat = await prisma.getChat(req.param.chatId);
+  const chat = await prisma.getChat(req.params.chatId);
 
   if (!chat)
     throw new CustomNotFoundError(
@@ -32,7 +32,7 @@ exports.getChatById = async (req, res) => {
 };
 
 exports.postChat = async (req, res) => {
-  if (!req.param.userId)
+  if (!req.params.targetId)
     // Checks if query is missing
     throw new CustomBadRequestError(
       "Necessary input missing",
@@ -41,7 +41,7 @@ exports.postChat = async (req, res) => {
       req.originalUrl
     );
 
-  const chat = await prisma.createChat(req.user.id, req.param.userId);
+  const chat = await prisma.createChat(req.user.id, req.params.targetId);
 
   res.json({
     status: "success",
@@ -53,7 +53,7 @@ exports.postMessage = async (req, res) => {
   const message = await prisma.createMessage(
     req.body.content,
     req.user.id,
-    req.param.chatId
+    req.params.chatId
   );
 
   res.json({

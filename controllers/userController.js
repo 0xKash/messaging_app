@@ -25,9 +25,9 @@ exports.getUserBySearch = async (req, res) => {
   });
 };
 
-// This function search any user by their unique id (req.param)
+// This function search any user by their unique id (req.params)
 exports.getUserById = async (req, res) => {
-  if (!req.query.userId)
+  if (!req.params.userId)
     throw new CustomBadRequestError(
       "Necessary input missing",
       "UserId query parameter is missing",
@@ -35,12 +35,12 @@ exports.getUserById = async (req, res) => {
       req.originalUrl
     );
 
-  const user = await prisma.getUserById(req.param.userId);
+  const user = await prisma.getUserById(req.params.userId);
 
   if (!user)
     throw new CustomNotFoundError(
       "User not found",
-      `The user with the id ${req.query.userId} does not exist`,
+      `The user with the id ${req.params.userId} does not exist`,
       "Please check if the id is correct",
       req.originalUrl
     );
@@ -52,7 +52,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.getUserChats = async (req, res) => {
-  if (!req.param.userId)
+  if (!req.params.userId)
     throw new CustomBadRequestError(
       "Necessary input missing",
       "UserId query parameter is missing",
@@ -60,7 +60,7 @@ exports.getUserChats = async (req, res) => {
       req.originalUrl
     );
 
-  const chats = await prisma.getChatsByUser(req.param.userId);
+  const chats = await prisma.getChatsByUser(req.params.userId);
 
   res.json({
     status: "success",
@@ -70,7 +70,16 @@ exports.getUserChats = async (req, res) => {
 
 // This function updated personal avatar
 exports.updateAvatar = async (req, res) => {
-  await prisma.updateAvatar(req.param.userId, req.body.avatar);
+  if (!req.params.userId) {
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "UserId query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+  }
+
+  await prisma.updateAvatar(req.params.userId, req.body.avatar);
 
   res.json({
     status: "success",
