@@ -1,19 +1,20 @@
 // imports
 const { Router } = require("express");
-const {
-  postChat,
-  getUserChats,
-  getChatMessages,
-} = require("../controllers/chatController");
 const isAuth = require("../lib/authMiddlewares");
+const {
+  getChatById,
+  postChat,
+  postMessage,
+} = require("../controllers/chatController");
 
 // chatRouter setup
 const chatRouter = Router();
 
-chatRouter.get("/", isAuth, getUserChats);
-chatRouter.post("/", isAuth, postChat);
+chatRouter.post("/:targetId", isAuth, postChat);
 
-chatRouter.get("/messages", isAuth, getChatMessages);
+chatRouter.get("/:chatId", isAuth, getChatById);
+
+chatRouter.post("/:chatId/messages", isAuth, postMessage);
 
 // exports
 module.exports = chatRouter;
