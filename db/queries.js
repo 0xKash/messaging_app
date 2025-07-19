@@ -44,14 +44,14 @@ exports.getUsersBySearch = async (searhInput, userId) => {
   }
 };
 
-exports.getUserById = async (userId, includeChat) => {
+exports.getUserById = async (userId) => {
   try {
     return await prisma.user.findUnique({
       where: {
         id: Number(userId),
       },
       include: {
-        chats: includeChat,
+        chats: true,
       },
     });
   } catch (err) {
