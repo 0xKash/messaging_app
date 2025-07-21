@@ -124,7 +124,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// This function updated personal avatar
+// This function updates personal avatar
 exports.updateAvatar = async (req, res) => {
   if (!req.params.userId) {
     throw new CustomBadRequestError(
