@@ -157,9 +157,10 @@ exports.updateAvatar = async (req, res) => {
   const avatarFile = decode(req.file.buffer.toString("base64"));
 
   const { data } = await supabase.updateAvatar(req.params.userId, avatarFile);
+  await prisma.updateAvatar(req.params.userId, data.publicUrl);
 
   res.json({
     status: "success",
-    data: data,
+    data: data.publicUrl,
   });
 };
