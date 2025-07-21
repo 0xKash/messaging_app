@@ -1,6 +1,9 @@
 // imports
 const prisma = require("../db/queries");
 const utils = require("../lib/utils");
+const supabase = require("../supabase/supabase");
+const { decode } = require("base64-arraybuffer");
+
 const {
   CustomNotFoundError,
   CustomNotAuthorizedError,
@@ -68,25 +71,6 @@ exports.getUserChats = async (req, res) => {
   });
 };
 
-// This function updated personal avatar
-exports.updateAvatar = async (req, res) => {
-  if (!req.params.userId) {
-    throw new CustomBadRequestError(
-      "Necessary input missing",
-      "UserId query parameter is missing",
-      "Make sure the query is correctly written and not empty",
-      req.originalUrl
-    );
-  }
-
-  await prisma.updateAvatar(req.params.userId, req.body.avatar);
-
-  res.json({
-    status: "success",
-    data: req.body.avatar,
-  });
-};
-
 // This function checks if user's input is valid, creates a new user on db & issues a new JWT token
 exports.postUser = async (req, res) => {
   const saltHash = utils.genPassword(req.body.password);
@@ -138,4 +122,44 @@ exports.loginUser = async (req, res) => {
       req.originalUrl
     );
   }
+};
+
+// This function updated personal avatar
+exports.updateAvatar = async (req, res) => {
+  if (!req.params.userId) {
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "UserId query parameter is missing",
+      "Make sure the query is correctly written and not empty",
+      req.originalUrl
+    );
+  }
+
+  if (!req.file) {
+    throw new CustomBadRequestError(
+      "Necessary input missing",
+      "File is missing",
+      "Please upload a file",
+      req.originalUrl
+    );
+  }
+
+  const user = await prisma.getUserById(req.params.userId);
+
+  if (!user)
+    throw new CustomNotFoundError(
+      "User not found",
+      `The user with the id ${req.params.userId} does not exist`,
+      "Please check if the id is correct",
+      req.originalUrl
+    );
+
+  const avatarFile = decode(req.file.buffer.toString("base64"));
+
+  const { data } = await supabase.updateAvatar(req.params.userId, avatarFile);
+
+  res.json({
+    status: "success",
+    data: data,
+  });
 };

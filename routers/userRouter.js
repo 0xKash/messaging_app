@@ -26,7 +26,7 @@ userRouter.get("/:userId/chats", isAuth, getUserChats);
 
 userRouter.post("/login", validateUser, loginUser);
 
-userRouter.post("/avatar", upload.single("avatar"), updateAvatar);
+userRouter.post("/:userId/avatar", upload.single("avatar"), updateAvatar);
 
 // exports
 module.exports = userRouter;
