@@ -1,5 +1,6 @@
 // imports
 const { Router } = require("express");
+const multer = require("multer");
 const { validateUser } = require("../validators/users");
 const isAuth = require("../lib/authMiddlewares");
 const {
@@ -11,8 +12,11 @@ const {
   getUserBySearch,
 } = require("../controllers/userController");
 
-// userRouter setup
+// setup
 const userRouter = Router();
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 
 userRouter.get("/", isAuth, getUserBySearch);
 userRouter.post("/", validateUser, postUser);
@@ -22,7 +26,7 @@ userRouter.get("/:userId/chats", isAuth, getUserChats);
 
 userRouter.post("/login", validateUser, loginUser);
 
-userRouter.post("/avatar", updateAvatar);
+userRouter.post("/avatar", upload.single("avatar"), updateAvatar);
 
 // exports
 module.exports = userRouter;
