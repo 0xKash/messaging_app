@@ -26,6 +26,7 @@
     "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
+    "base64-arraybuffer": "^1.0.2",
     "prisma": "^6.6.0"
   }
 }
